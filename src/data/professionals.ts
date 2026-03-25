@@ -1,4 +1,6 @@
-export const professionals = [
+import type { Professional } from '../types/professional'
+
+export const professionals: Professional[] = [
   {
     id: 'marcus-sterling',
     name: 'Marcus Sterling',
