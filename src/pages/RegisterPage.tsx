@@ -13,7 +13,6 @@ type AccountType = 'cliente' | 'prestador'
 interface RegisterFormState {
   fullName: string
   email: string
-  username: string
   phone: string
   password: string
   confirmPassword: string
@@ -25,7 +24,6 @@ interface RegisterFormState {
 interface ValidationState {
   fullName?: string
   email?: string
-  username?: string
   phone?: string
   password?: string
   confirmPassword?: string
@@ -36,8 +34,7 @@ interface ValidationState {
 const initialFormState: RegisterFormState = {
   fullName: '',
   email: '',
-  username: '',
-  phone: '',
+  phone: '+55 ',
   password: '',
   confirmPassword: '',
   accountType: 'cliente',
@@ -59,8 +56,34 @@ function mapZodIssues(error: ZodError): ValidationState {
   return fieldErrors
 }
 
-function normalizePhoneInput(value: string) {
-  return value.replace(/[^\d()+\-\s]/g, '').slice(0, 24)
+function formatBrazilPhoneInput(value: string) {
+  const digitsOnly = value.replace(/\D/g, '')
+  const localDigits = (digitsOnly.startsWith('55') ? digitsOnly.slice(2) : digitsOnly).slice(0, 11)
+
+  if (!localDigits) {
+    return '+55 '
+  }
+
+  if (localDigits.length < 3) {
+    return `+55 (${localDigits}`
+  }
+
+  const areaCode = localDigits.slice(0, 2)
+  const subscriber = localDigits.slice(2)
+
+  if (!subscriber) {
+    return `+55 (${areaCode}) `
+  }
+
+  if (subscriber.length <= 4) {
+    return `+55 (${areaCode}) ${subscriber}`
+  }
+
+  if (subscriber.length <= 8) {
+    return `+55 (${areaCode}) ${subscriber.slice(0, 4)}-${subscriber.slice(4)}`
+  }
+
+  return `+55 (${areaCode}) ${subscriber.slice(0, 5)}-${subscriber.slice(5)}`
 }
 
 export function RegisterPage() {
@@ -69,6 +92,8 @@ export function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false)
 
   const passwordChecks = useMemo(
     () => [
@@ -79,6 +104,7 @@ export function RegisterPage() {
     ],
     [form.password]
   )
+  const confirmPasswordMatches = form.confirmPassword.length > 0 && form.password === form.confirmPassword
 
   function updateField<K extends keyof RegisterFormState>(field: K, value: RegisterFormState[K]) {
     setForm((current) => ({ ...current, [field]: value }))
@@ -96,7 +122,6 @@ export function RegisterPage() {
     const payload: RegisterUserRequest = {
       fullName: form.fullName,
       email: form.email,
-      username: form.username.trim() ? form.username : undefined,
       phone: form.phone,
       password: form.password,
       role: form.accountType === 'prestador' ? 'provider' : 'customer',
@@ -165,7 +190,7 @@ export function RegisterPage() {
                 <Sparkles size={18} aria-hidden="true" />
               </div>
               <h3>Cadastro utilizável</h3>
-              <p>Telefone, username opcional e tipo de conta já seguem o domínio atual da aplicação.</p>
+              <p>Telefone com máscara brasileira e tipo de conta alinhado ao domínio atual da aplicação.</p>
             </Surface>
 
             <Surface className="highlight-card register-highlight-card">
@@ -225,6 +250,7 @@ export function RegisterPage() {
               placeholder="Seu nome e sobrenome"
               value={form.fullName}
               onChange={(event) => updateField('fullName', event.target.value)}
+              maxLength={255}
               hint={errors.fullName}
               required
               aria-invalid={Boolean(errors.fullName)}
@@ -238,22 +264,11 @@ export function RegisterPage() {
               placeholder="voce@exemplo.com"
               value={form.email}
               onChange={(event) => updateField('email', event.target.value)}
+              maxLength={320}
               hint={errors.email}
               required
               aria-invalid={Boolean(errors.email)}
               inputClassName={errors.email ? 'is-invalid' : ''}
-            />
-
-            <TextField
-              label="Username"
-              type="text"
-              autoComplete="username"
-              placeholder="nome.usuario"
-              value={form.username}
-              onChange={(event) => updateField('username', event.target.value)}
-              hint={errors.username ?? 'Opcional. Você também poderá entrar usando este identificador.'}
-              aria-invalid={Boolean(errors.username)}
-              inputClassName={errors.username ? 'is-invalid' : ''}
             />
 
             <TextField
@@ -262,8 +277,10 @@ export function RegisterPage() {
               autoComplete="tel"
               placeholder="+55 (61) 99999-9999"
               value={form.phone}
-              onChange={(event) => updateField('phone', normalizePhoneInput(event.target.value))}
-              hint={errors.phone ?? 'Inclua DDD. Exemplo: +55 (61) 99999-9999'}
+              onChange={(event) => updateField('phone', formatBrazilPhoneInput(event.target.value))}
+              maxLength={19}
+              inputMode="numeric"
+              hint={errors.phone ?? 'O número é formatado automaticamente no padrão brasileiro.'}
               required
               aria-invalid={Boolean(errors.phone)}
               inputClassName={errors.phone ? 'is-invalid' : ''}
@@ -277,6 +294,7 @@ export function RegisterPage() {
                 placeholder="Nome comercial"
                 value={form.companyName}
                 onChange={(event) => updateField('companyName', event.target.value)}
+                maxLength={120}
                 hint={errors.companyName}
                 required
                 aria-invalid={Boolean(errors.companyName)}
@@ -291,6 +309,9 @@ export function RegisterPage() {
               placeholder="Crie uma senha"
               value={form.password}
               onChange={(event) => updateField('password', event.target.value)}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+              maxLength={72}
               hint={errors.password}
               required
               aria-invalid={Boolean(errors.password)}
@@ -304,6 +325,9 @@ export function RegisterPage() {
               placeholder="Repita a senha"
               value={form.confirmPassword}
               onChange={(event) => updateField('confirmPassword', event.target.value)}
+              onFocus={() => setIsConfirmPasswordFocused(true)}
+              onBlur={() => setIsConfirmPasswordFocused(false)}
+              maxLength={72}
               hint={errors.confirmPassword}
               required
               aria-invalid={Boolean(errors.confirmPassword)}
@@ -311,12 +335,34 @@ export function RegisterPage() {
             />
           </div>
 
-          <Surface className="register-success register-password-checklist" as="div">
-            <strong>Requisitos da senha</strong>
-            {passwordChecks.map((item) => (
-              <p key={item.label}>{item.isValid ? 'OK' : 'Pendente'}: {item.label}</p>
-            ))}
-          </Surface>
+          {isPasswordFocused ? (
+            <Surface className="register-checklist-card" as="div">
+              <strong>Requisitos da senha</strong>
+              <div className="register-checklist">
+                {passwordChecks.map((item) => (
+                  <p
+                    key={item.label}
+                    className={`register-checklist-item ${item.isValid ? 'is-valid' : 'is-invalid'}`}
+                  >
+                    <span aria-hidden="true">{item.isValid ? '✅' : '❌'}</span>
+                    <span>{item.label}</span>
+                  </p>
+                ))}
+              </div>
+            </Surface>
+          ) : null}
+
+          {isConfirmPasswordFocused ? (
+            <Surface className="register-checklist-card" as="div">
+              <strong>Confirmação da senha</strong>
+              <div className="register-checklist">
+                <p className={`register-checklist-item ${confirmPasswordMatches ? 'is-valid' : 'is-invalid'}`}>
+                  <span aria-hidden="true">{confirmPasswordMatches ? '✅' : '❌'}</span>
+                  <span>As senhas precisam ser iguais.</span>
+                </p>
+              </div>
+            </Surface>
+          ) : null}
 
           <label className="checkbox-row register-terms">
             <input

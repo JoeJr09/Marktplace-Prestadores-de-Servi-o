@@ -5,13 +5,8 @@ export const userAccountStatusSchema = z.enum(['pending', 'active', 'inactive', 
 export const registerableUserRoleSchema = z.enum(['customer', 'provider'])
 
 export const userIdSchema = z.string().uuid()
-export const fullNameSchema = z.string().trim().min(3).max(120)
-export const usernameSchema = z
-  .string()
-  .trim()
-  .min(3)
-  .max(50)
-  .regex(/^[a-z0-9._-]+$/i, 'O username deve conter apenas letras, números, ponto, underline ou hífen.')
+export const emailSchema = z.string().trim().max(320, 'O e-mail deve ter no máximo 320 caracteres.').email()
+export const fullNameSchema = z.string().trim().min(3).max(255, 'O nome completo deve ter no máximo 255 caracteres.')
 export const passwordSchema = z
   .string()
   .min(8, 'A senha precisa ter no mínimo 8 caracteres.')
@@ -22,19 +17,12 @@ export const passwordSchema = z
 export const phoneSchema = z
   .string()
   .trim()
-  .min(10, 'Informe um telefone com DDD.')
-  .max(24, 'Informe um telefone válido.')
-  .regex(/^\+?[0-9()\-\s]+$/, 'Use apenas números, espaços, parênteses, hífen e o prefixo +.')
-  .refine((value) => {
-    const digits = value.replace(/\D/g, '')
-    return digits.length >= 10 && digits.length <= 15
-  }, 'Informe um telefone válido com DDD.')
+  .regex(/^\+55\s\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Use o formato +55 (11) 99999-9999.')
 export const companyNameSchema = z.string().trim().min(2).max(120)
 
 export const sharedUserIdentitySchema = z.object({
   id: userIdSchema,
-  email: z.email(),
-  username: usernameSchema.nullable().optional(),
+  email: emailSchema,
   fullName: fullNameSchema,
   role: userRoleSchema,
   status: userAccountStatusSchema
@@ -48,12 +36,9 @@ export const userProfileSchema = sharedUserIdentitySchema.extend({
   lastLoginAt: z.string().datetime().nullable().optional()
 })
 
-export const loginIdentifierSchema = z.string().trim().min(3).max(320)
-
 export const registerUserRequestSchema = z.object({
   fullName: fullNameSchema,
-  email: z.email(),
-  username: usernameSchema.optional(),
+  email: emailSchema,
   password: passwordSchema,
   role: registerableUserRoleSchema.default('customer'),
   phone: phoneSchema,
@@ -71,7 +56,6 @@ export const registerUserRequestSchema = z.object({
 export const updateUserProfileRequestSchema = z
   .object({
     fullName: fullNameSchema.optional(),
-    username: usernameSchema.optional(),
     phone: phoneSchema.nullable().optional(),
     companyName: companyNameSchema.nullable().optional(),
     status: userAccountStatusSchema.optional()

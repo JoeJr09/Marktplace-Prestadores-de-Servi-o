@@ -46,12 +46,14 @@ Scripts de banco disponíveis:
 - `npm run prisma:migrate -- --name <nome>` — cria/aplica migrations Prisma no banco local
 - `npm run prisma:seed` — aplica seeds Prisma para guest, usuário padrão e admin
 - `npm run prisma:studio` — abre o Prisma Studio
-- `npm run qa:auth-smoke` — executa smoke tests de guest login, Zod inválido e registro local
+- `npm run qa:auth-smoke` — executa smoke tests de guest login por e-mail, Zod inválido e registro local
 
 Credenciais de desenvolvimento:
 
 - `username@guest.com`
 - `Password123@`
+
+O login local usa `e-mail + senha` como identificador de autenticação.
 
 4. Build de produção:
 
@@ -67,5 +69,6 @@ npm run build
 - O ambiente local pode operar com `USER_DATA_SOURCE=database` para persistência real em PostgreSQL ou `USER_DATA_SOURCE=mock` quando for necessário trabalhar sem banco.
 - O PostgreSQL local usa o schema dedicado `acode_aqui` quando `DATABASE_URL` aponta para `?schema=acode_aqui`.
 - O cadastro local já aceita criação de contas reais no banco, com validação compartilhada por Zod entre frontend e backend.
+- O registro local usa e-mail único, nome completo com até 255 caracteres e telefone brasileiro no formato `+55 (11) 99999-9999`.
 - Arquitetura de dados inicial do domínio de usuários: [docs/user-data-architecture.md](/home/renan/Documentos/UCB/5-Semestre/web/projeto_acode_aqui/Marktplace-Prestadores-de-Servi-o/docs/user-data-architecture.md)
 - Schema e seeds locais do banco: [schema.sql](/home/renan/Documentos/UCB/5-Semestre/web/projeto_acode_aqui/Marktplace-Prestadores-de-Servi-o/server/database/schema.sql) e [seed.dev.sql](/home/renan/Documentos/UCB/5-Semestre/web/projeto_acode_aqui/Marktplace-Prestadores-de-Servi-o/server/database/seed.dev.sql)

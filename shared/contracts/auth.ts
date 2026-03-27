@@ -1,10 +1,10 @@
 import { z } from 'zod'
-import { loginIdentifierSchema, passwordSchema, sharedUserIdentitySchema } from './user-account'
+import { emailSchema, passwordSchema, sharedUserIdentitySchema } from './user-account'
 
 export const authUserSchema = sharedUserIdentitySchema
 
 export const loginRequestSchema = z.object({
-  username: loginIdentifierSchema,
+  email: emailSchema,
   password: passwordSchema
 })
 

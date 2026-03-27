@@ -9,7 +9,7 @@ import { dashboardHighlights } from '../data/appData'
 export function LoginPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [username, setUsername] = useState('username@guest.com')
+  const [email, setEmail] = useState('username@guest.com')
   const [password, setPassword] = useState('Password123@')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -20,7 +20,7 @@ export function LoginPage() {
     setErrorMessage(null)
 
     try {
-      await login({ username, password })
+      await login({ email, password })
       navigate('/dashboard', { replace: true })
     } catch (error) {
       if (error instanceof ApiError) {
@@ -68,12 +68,12 @@ export function LoginPage() {
           </div>
 
           <TextField
-            label="E-mail ou username"
-            type="text"
+            label="E-mail"
+            type="email"
             placeholder="username@guest.com"
-            autoComplete="username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
           />
           <TextField
             label="Senha"

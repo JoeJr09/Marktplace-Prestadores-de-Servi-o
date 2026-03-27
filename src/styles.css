@@ -260,15 +260,26 @@ button {
   line-height: 1.55;
 }
 
-.register-success {
+.register-success,
+.register-checklist-card {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 16px;
   border-radius: 18px;
+  box-shadow: none;
+}
+
+.register-success {
   background: rgba(119, 179, 155, 0.12);
   border: 1px solid rgba(119, 179, 155, 0.22);
-  box-shadow: none;
+}
+
+.register-checklist-card {
+  display: grid;
+  gap: 10px;
+  background: rgba(111, 135, 149, 0.08);
+  border: 1px solid rgba(111, 135, 149, 0.18);
 }
 
 .register-success p {
@@ -277,17 +288,29 @@ button {
   line-height: 1.55;
 }
 
-.register-password-checklist {
+.register-checklist {
   display: grid;
   gap: 8px;
 }
 
-.register-password-checklist strong {
+.register-checklist-card strong {
   color: var(--text);
 }
 
-.register-password-checklist p {
+.register-checklist-item {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--text-muted);
+}
+
+.register-checklist-item.is-valid {
+  color: var(--success);
+}
+
+.register-checklist-item.is-invalid {
+  color: #d16b6b;
 }
 
 .register-footer {

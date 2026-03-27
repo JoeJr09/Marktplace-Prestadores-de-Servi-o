@@ -6,7 +6,6 @@ const prisma = new PrismaClient()
 async function upsertUser(input: {
   id: string
   email: string
-  username: string | null
   fullName: string
   phone: string | null
   companyName: string | null
@@ -16,7 +15,6 @@ async function upsertUser(input: {
   isSeeded: boolean
 }) {
   const emailNormalized = input.email.trim().toLowerCase()
-  const usernameNormalized = input.username?.trim().toLowerCase() ?? null
   const passwordHash = await hashPassword(input.password)
 
   await prisma.user.create({
@@ -24,8 +22,6 @@ async function upsertUser(input: {
       id: input.id,
       email: input.email,
       emailNormalized,
-      username: input.username,
-      usernameNormalized,
       fullName: input.fullName,
       phone: input.phone,
       companyName: input.companyName,
@@ -55,7 +51,6 @@ async function main() {
   await upsertUser({
     id: '11111111-1111-4111-8111-111111111111',
     email: 'username@guest.com',
-    username: 'guest.local',
     fullName: 'Guest Operator',
     phone: '+55 (61) 99999-0001',
     companyName: null,
@@ -68,7 +63,6 @@ async function main() {
   await upsertUser({
     id: '22222222-2222-4222-8222-222222222222',
     email: 'dev.user@acode.local',
-    username: 'dev.user',
     fullName: 'Dev User',
     phone: '+55 (61) 99999-0002',
     companyName: null,
@@ -81,7 +75,6 @@ async function main() {
   await upsertUser({
     id: '33333333-3333-4333-8333-333333333333',
     email: 'admin@acode.local',
-    username: 'admin.local',
     fullName: 'Admin Operator',
     phone: '+55 (61) 99999-0003',
     companyName: 'Acode Aqui Admin',

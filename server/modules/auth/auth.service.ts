@@ -5,13 +5,12 @@ import { HttpError } from '../../lib/http-error'
 import { hashPassword, verifyPassword } from '../../lib/password'
 import type { AuthIdentityRepository, SessionRepository } from './auth.repository'
 
-const MOCK_USERNAME = 'username@guest.com'
+const MOCK_EMAIL = 'username@guest.com'
 const MOCK_PASSWORD = 'Password123@'
 
 const guestUser: AuthUser = {
   id: '11111111-1111-4111-8111-111111111111',
-  email: MOCK_USERNAME,
-  username: 'guest.local',
+  email: MOCK_EMAIL,
   fullName: 'Guest Operator',
   role: 'guest',
   status: 'active'
@@ -25,7 +24,7 @@ export class AuthService {
 
   async login(credentials: LoginRequest): Promise<AuthSession> {
     if (!this.authIdentityRepository) {
-      if (credentials.username !== MOCK_USERNAME || credentials.password !== MOCK_PASSWORD) {
+      if (credentials.email !== MOCK_EMAIL || credentials.password !== MOCK_PASSWORD) {
         throw new HttpError(401, 'INVALID_CREDENTIALS', 'Credenciais inválidas para o ambiente de desenvolvimento.')
       }
 
@@ -39,7 +38,7 @@ export class AuthService {
       return session
     }
 
-    const authIdentity = await this.authIdentityRepository.findByLoginIdentifier(credentials.username)
+    const authIdentity = await this.authIdentityRepository.findByEmail(credentials.email)
 
     if (!authIdentity) {
       throw new HttpError(401, 'INVALID_CREDENTIALS', 'Credenciais inválidas.')
@@ -61,7 +60,6 @@ export class AuthService {
       user: {
         id: authIdentity.id,
         email: authIdentity.email,
-        username: authIdentity.username ?? null,
         fullName: authIdentity.fullName,
         role: authIdentity.role,
         status: authIdentity.status
@@ -84,20 +82,11 @@ export class AuthService {
     }
 
     const normalizedEmail = input.email.trim().toLowerCase()
-    const normalizedUsername = input.username?.trim().toLowerCase()
 
-    const existingEmail = await this.authIdentityRepository.findByLoginIdentifier(normalizedEmail)
+    const existingEmail = await this.authIdentityRepository.findByEmail(normalizedEmail)
 
     if (existingEmail) {
       throw new HttpError(409, 'EMAIL_ALREADY_IN_USE', 'Já existe uma conta com este e-mail.')
-    }
-
-    if (normalizedUsername) {
-      const existingUsername = await this.authIdentityRepository.findByLoginIdentifier(normalizedUsername)
-
-      if (existingUsername) {
-        throw new HttpError(409, 'USERNAME_ALREADY_IN_USE', 'Este username já está em uso.')
-      }
     }
 
     const passwordHash = await hashPassword(input.password)

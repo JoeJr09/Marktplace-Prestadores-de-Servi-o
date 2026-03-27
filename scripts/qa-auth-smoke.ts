@@ -33,7 +33,6 @@ async function main() {
   const validRegistration = {
     fullName: 'QA Register User',
     email: `qa.register.${uniqueSuffix}@acode.local`,
-    username: `qa.register.${uniqueSuffix}`,
     phone: '+55 (61) 98888-7766',
     password: 'Password123@',
     role: 'customer'
@@ -44,7 +43,7 @@ async function main() {
       await fetch(`${baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'username@guest.com', password: 'Password123@' })
+        body: JSON.stringify({ email: 'username@guest.com', password: 'Password123@' })
       })
     )
     assertCondition(guestLogin.status === 200, 'Guest login should return 200.')
@@ -62,16 +61,25 @@ async function main() {
       await fetch(`${baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'username@guest.com', password: 'wrong' })
+        body: JSON.stringify({ email: 'username@guest.com', password: 'wrong' })
       })
     )
     assertCondition(invalidGuestPayload.status === 400, 'Schema-invalid login payload should return 400.')
+
+    const invalidEmailLogin = await readJson(
+      await fetch(`${baseUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'nao-e-email', password: 'Password123@' })
+      })
+    )
+    assertCondition(invalidEmailLogin.status === 400, 'Login with an invalid email should return 400.')
 
     const invalidGuestLogin = await readJson(
       await fetch(`${baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'username@guest.com', password: 'Wrongpass123@' })
+        body: JSON.stringify({ email: 'username@guest.com', password: 'Wrongpass123@' })
       })
     )
     assertCondition(invalidGuestLogin.status === 401, 'Wrong but schema-valid guest password should return 401.')
@@ -94,6 +102,19 @@ async function main() {
     )
     assertCondition(weakPasswordRegister.status === 400, 'Weak password register should return 400.')
 
+    const overlongNameRegister = await readJson(
+      await fetch(`${baseUrl}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...validRegistration,
+          email: `longname.${uniqueSuffix}@acode.local`,
+          fullName: 'A'.repeat(256)
+        })
+      })
+    )
+    assertCondition(overlongNameRegister.status === 400, 'Full name over 255 chars should return 400.')
+
     const invalidPhoneRegister = await readJson(
       await fetch(`${baseUrl}/api/auth/register`, {
         method: 'POST',
@@ -110,7 +131,6 @@ async function main() {
         body: JSON.stringify({
           ...validRegistration,
           email: `provider.${uniqueSuffix}@acode.local`,
-          username: `provider.${uniqueSuffix}`,
           role: 'provider'
         })
       })
@@ -130,7 +150,7 @@ async function main() {
       await fetch(`${baseUrl}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(validRegistration)
+        body: JSON.stringify({ ...validRegistration, email: validRegistration.email.toUpperCase() })
       })
     )
     assertCondition(duplicateRegister.status === 409, 'Duplicate register should return 409.')
@@ -139,7 +159,7 @@ async function main() {
       await fetch(`${baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: validRegistration.email, password: validRegistration.password })
+        body: JSON.stringify({ email: validRegistration.email, password: validRegistration.password })
       })
     )
     assertCondition(newUserLogin.status === 200, 'Newly registered user should be able to login.')

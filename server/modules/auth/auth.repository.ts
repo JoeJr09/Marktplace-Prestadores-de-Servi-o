@@ -8,7 +8,7 @@ export type AuthIdentityRecord = AuthSession['user'] & {
 }
 
 export interface AuthIdentityRepository {
-  findByLoginIdentifier(identifier: string): Promise<AuthIdentityRecord | null>
+  findByEmail(email: string): Promise<AuthIdentityRecord | null>
   recordSuccessfulLogin(userId: string, loginAt: Date): Promise<void>
   createUser(input: RegisterUserRequest, passwordHash: string): Promise<UserProfile>
 }
@@ -42,7 +42,6 @@ function hashSessionToken(token: string) {
 function toAuthIdentityRecord(user: {
   id: string
   email: string
-  username: string | null
   fullName: string
   role: AuthIdentityRecord['role']
   status: AuthIdentityRecord['status']
@@ -51,7 +50,6 @@ function toAuthIdentityRecord(user: {
   return {
     id: user.id,
     email: user.email,
-    username: user.username ?? null,
     fullName: user.fullName,
     role: user.role,
     status: user.status,
@@ -62,7 +60,6 @@ function toAuthIdentityRecord(user: {
 function toUserProfile(user: {
   id: string
   email: string
-  username: string | null
   fullName: string
   phone: string | null
   companyName: string | null
@@ -75,7 +72,6 @@ function toUserProfile(user: {
   return {
     id: user.id,
     email: user.email,
-    username: user.username ?? null,
     fullName: user.fullName,
     phone: user.phone ?? null,
     companyName: user.companyName ?? null,
@@ -92,7 +88,6 @@ function toAuthSession(
   user: {
     id: string
     email: string
-    username: string | null
     fullName: string
     role: AuthIdentityRecord['role']
     status: AuthIdentityRecord['status']
@@ -103,7 +98,6 @@ function toAuthSession(
     user: {
       id: user.id,
       email: user.email,
-      username: user.username ?? null,
       fullName: user.fullName,
       role: user.role,
       status: user.status
@@ -112,17 +106,16 @@ function toAuthSession(
 }
 
 export class PrismaAuthIdentityRepository implements AuthIdentityRepository {
-  async findByLoginIdentifier(identifier: string): Promise<AuthIdentityRecord | null> {
-    const normalizedIdentifier = identifier.trim().toLowerCase()
+  async findByEmail(email: string): Promise<AuthIdentityRecord | null> {
+    const normalizedEmail = email.trim().toLowerCase()
 
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        deletedAt: null,
-        OR: [{ emailNormalized: normalizedIdentifier }, { usernameNormalized: normalizedIdentifier }]
+        emailNormalized: normalizedEmail
       }
     })
 
-    if (!user) {
+    if (!user || user.deletedAt) {
       return null
     }
 
@@ -141,8 +134,6 @@ export class PrismaAuthIdentityRepository implements AuthIdentityRepository {
       data: {
         email: input.email.trim(),
         emailNormalized: input.email.trim().toLowerCase(),
-        username: input.username?.trim() || null,
-        usernameNormalized: input.username?.trim().toLowerCase() || null,
         fullName: input.fullName.trim(),
         phone: input.phone.trim(),
         companyName: input.companyName?.trim() || null,
