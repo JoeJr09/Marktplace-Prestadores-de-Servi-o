@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { z } from 'zod'
 
-const ENV_FILE_CANDIDATES = ['.env']
+const ENV_FILE_CANDIDATES = ['.env.local', '.env']
 
 function loadEnvFile(filePath: string) {
   if (!existsSync(filePath)) {

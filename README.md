@@ -19,13 +19,21 @@ Frontend React baseado nos layouts enviados (Figma), com foco em fidelidade visu
 npm install
 ```
 
+Requisitos de ambiente:
+
+- Node.js `20.x` LTS ou `22.x`
+- npm `10+`
+
+Se você usa `nvm`, a versão recomendada está em `.nvmrc`.
+
 2. Configure o ambiente local:
 
 ```bash
-cp .env.example .env
+npm run setup:env
 ```
 
 O projeto usa um único arquivo `.env` na raiz como fonte local de configuração.
+Se precisar sobrescrever valores locais sem versionar mudanças, use `.env.local`.
 
 Para preparar o banco local, use `.env.example` como base e preencha seus valores reais no arquivo `.env`.
 
@@ -67,6 +75,7 @@ npm run build
 - Tipografia via Google Fonts (Inter).
 - Estrutura visual e paleta derivadas dos mockups enviados.
 - O ambiente local pode operar com `USER_DATA_SOURCE=database` para persistência real em PostgreSQL ou `USER_DATA_SOURCE=mock` quando for necessário trabalhar sem banco.
+- Os loaders locais consideram `.env.local` antes de `.env`.
 - O PostgreSQL local usa o schema dedicado `acode_aqui` quando `DATABASE_URL` aponta para `?schema=acode_aqui`.
 - O cadastro local já aceita criação de contas reais no banco, com validação compartilhada por Zod entre frontend e backend.
 - O registro local usa e-mail único, nome completo com até 255 caracteres e telefone brasileiro no formato `+55 (11) 99999-9999`.

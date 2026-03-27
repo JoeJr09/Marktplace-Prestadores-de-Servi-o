@@ -35,12 +35,14 @@ Use this section as the canonical quick-memory for agents entering the repositor
 - Frontend runtime:
   - React 18
   - React Router 6
-  - Vite 5
+  - Vite 6
 - Backend runtime:
   - Node.js
   - Express 5
 - Language standard:
-  - TypeScript for application code and shared contracts
+  - TypeScript for application code, shared contracts, scripts, and configuration
+  - repository-owned `.js` and `.mjs` source files are not allowed
+  - convert `.js` to `.ts` and `.mjs` to `.mts`
 - Validation:
   - Zod is the shared validation layer across frontend, backend, and environment parsing
 - Database:
@@ -160,6 +162,10 @@ Do not start wide refactors or architecture changes without a clear reason tied 
 
 ### TypeScript standards
 - Use TypeScript as a design tool, not just a compiler gate.
+- The repository source code must be written exclusively in TypeScript.
+- JavaScript source files are forbidden in the repository codebase.
+- Convert any legacy `.js` source file to `.ts` and any legacy `.mjs` source file to `.mts`.
+- Scripts, configs, helpers, services, modules, and relevant structures must remain explicitly typed.
 - Prefer explicit types at boundaries and inferred types internally when clear.
 - Avoid `any`. Use `unknown` at unsafe boundaries and narrow it properly.
 - Avoid broad type assertions unless they are justified and localized.
@@ -321,6 +327,7 @@ Do not:
 - make unrelated architectural changes without justification
 - rewrite existing patterns just for preference
 - change public contracts silently
+- commit new first-party `.js` or `.mjs` files
 - modify database models or indexes without DBA input when the change is non-trivial
 - change pipelines, deployment logic, environment semantics, or release behavior without DevOps input
 - bypass validation and still claim completion

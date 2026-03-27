@@ -3,27 +3,33 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=20.0.0 <21 || >=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
-    "dev": "node scripts/dev.mjs",
+    "setup:env": "node --import tsx scripts/setup-env.mts",
+    "dev": "node --import tsx scripts/dev.mts",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
-    "db:schema": "node scripts/db.mjs schema",
-    "db:seed": "node scripts/db.mjs seed",
-    "db:reset": "node scripts/db.mjs reset",
-    "prisma:generate": "node scripts/prisma.mjs generate",
-    "prisma:migrate": "node scripts/prisma.mjs migrate dev",
-    "prisma:deploy": "node scripts/prisma.mjs migrate deploy",
-    "prisma:seed": "node scripts/prisma.mjs db seed",
-    "prisma:studio": "node scripts/prisma.mjs studio",
+    "db:schema": "node --import tsx scripts/db.mts schema",
+    "db:seed": "node --import tsx scripts/db.mts seed",
+    "db:reset": "node --import tsx scripts/db.mts reset",
+    "prisma:generate": "node --import tsx scripts/prisma.mts generate",
+    "prisma:migrate": "node --import tsx scripts/prisma.mts migrate dev",
+    "prisma:deploy": "node --import tsx scripts/prisma.mts migrate deploy",
+    "prisma:seed": "node --import tsx scripts/prisma.mts db seed",
+    "prisma:studio": "node --import tsx scripts/prisma.mts studio",
     "qa:auth-smoke": "tsx scripts/qa-auth-smoke.ts",
     "build": "vite build",
     "build:server": "tsc -p tsconfig.server.json",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.server.json --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.scripts.json",
     "preview": "vite preview",
     "start:server": "node server/dist/server/index.js"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "6.12.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "lucide-react": "^0.511.0",
@@ -39,10 +45,10 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.7.0",
-    "prisma": "^6.16.2",
+    "prisma": "6.12.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "vite": "^5.4.20"
+    "vite": "^6.4.1"
   },
   "prisma": {
     "seed": "npm exec -- tsx prisma/seed.ts"

@@ -70,8 +70,8 @@
 ## 5. Env strategy
 
 - Public template: `.env.example`
-- Local real values: `.env`, `.env.local` or `.env/.env.local`
-- Current backend loading order: `.env/.env.local`, `.env.local`, `.env`
+- Local real values: `.env` with optional `.env.local` overrides
+- Current loading order: `.env.local`, `.env`
 - Minimum variables:
   - `DATABASE_HOST`
   - `DATABASE_PORT`

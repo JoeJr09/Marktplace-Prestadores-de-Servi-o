@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 function readEnvValue(key: string) {
-  for (const relativePath of ['.env']) {
+  for (const relativePath of ['.env.local', '.env']) {
     const absolutePath = path.resolve(process.cwd(), relativePath)
 
     if (!existsSync(absolutePath)) {
