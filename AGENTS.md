@@ -26,6 +26,56 @@ Primary goal:
 - validate before concluding work
 - avoid unnecessary architectural churn
 
+## Current project stack
+
+Use this section as the canonical quick-memory for agents entering the repository.
+
+- GitHub repository:
+  - `https://github.com/JoeJr09/Marktplace-Prestadores-de-Servi-o`
+- Frontend runtime:
+  - React 18
+  - React Router 6
+  - Vite 5
+- Backend runtime:
+  - Node.js
+  - Express 5
+- Language standard:
+  - TypeScript for application code and shared contracts
+- Validation:
+  - Zod is the shared validation layer across frontend, backend, and environment parsing
+- Database:
+  - PostgreSQL local for development
+  - Prisma ORM for schema, migrations, client, and seed orchestration
+  - dedicated PostgreSQL schema: `acode_aqui`
+- Auth:
+  - Bearer token flow backed by `auth_sessions`
+  - guest seed account for smoke and navigation testing
+- Shared contracts:
+  - `shared/contracts/*` is the source of truth for request/response and domain validation shapes
+- Environment strategy:
+  - local runtime uses a single root `.env`
+  - `.env.example` must remain secret-free
+
+## Important current conventions
+
+- The project currently supports `USER_DATA_SOURCE=database`, `mock`, or `hybrid`, but database-backed local development is the preferred path.
+- Password validation is shared through Zod and currently requires:
+  - minimum 8 characters
+  - at least one uppercase letter
+  - at least one number
+  - at least one special character
+- Registration and auth validation should be aligned between:
+  - `shared/contracts/user-account.ts`
+  - `shared/contracts/auth.ts`
+  - frontend form handling
+  - backend route parsing
+- Prisma schema changes must be reflected in:
+  - `prisma/schema.prisma`
+  - generated migrations
+  - seeds when relevant
+  - any legacy SQL helper files kept for local DBA workflows
+- QA smoke coverage should prefer high-signal local scripts when no dedicated test runner exists yet.
+
 ## Instruction hierarchy
 
 Use instructions in this order:

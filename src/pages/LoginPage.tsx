@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../services/apiClient'
 import { useAuth } from '../auth/AuthProvider'
 import { Brand, Button, Surface, TextField } from '../components/ui'
@@ -10,7 +10,7 @@ export function LoginPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
   const [username, setUsername] = useState('username@guest.com')
-  const [password, setPassword] = useState('password123@')
+  const [password, setPassword] = useState('Password123@')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -68,8 +68,8 @@ export function LoginPage() {
           </div>
 
           <TextField
-            label="Usuário"
-            type="email"
+            label="E-mail ou username"
+            type="text"
             placeholder="username@guest.com"
             autoComplete="username"
             value={username}
@@ -87,7 +87,7 @@ export function LoginPage() {
           <Surface className="dev-credential-card" as="div">
             <strong>Credenciais de desenvolvimento</strong>
             <span>username@guest.com</span>
-            <span>password123@</span>
+            <span>Password123@</span>
           </Surface>
 
           {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
@@ -97,13 +97,20 @@ export function LoginPage() {
               <input type="checkbox" defaultChecked />
               <span>Manter conectado neste dispositivo</span>
             </label>
-            <span className="login-inline-note">Sessão mockada para desenvolvimento local.</span>
+            <span className="login-inline-note">Autenticação validada pela API local com banco PostgreSQL.</span>
           </div>
 
           <Button className="full-width" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Entrando...' : 'Entrar no painel'}
             <ArrowRight size={16} aria-hidden="true" />
           </Button>
+
+          <div className="login-shortcuts">
+            <span>Não tem acesso ainda?</span>
+            <Link to="/register" className="mini-link">
+              Criar conta
+            </Link>
+          </div>
 
           <div className="security-note">
             <ShieldCheck size={16} aria-hidden="true" />

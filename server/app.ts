@@ -2,10 +2,15 @@ import cors from 'cors'
 import express, { type NextFunction, type Request, type Response } from 'express'
 import { ZodError } from 'zod'
 import { apiErrorSchema } from '../shared/contracts/api'
+import { serverConfig } from './config'
 import { HttpError } from './lib/http-error'
 import { AuthController } from './modules/auth/auth.controller'
 import { createRequireAuth } from './modules/auth/auth.middleware'
-import { InMemorySessionRepository } from './modules/auth/auth.repository'
+import {
+  InMemorySessionRepository,
+  PrismaAuthIdentityRepository,
+  PrismaSessionRepository
+} from './modules/auth/auth.repository'
 import { createAuthRoutes } from './modules/auth/auth.routes'
 import { AuthService } from './modules/auth/auth.service'
 import { UserController } from './modules/users/user.controller'
@@ -15,8 +20,10 @@ import { UserService } from './modules/users/user.service'
 
 export function createApp() {
   const app = express()
-  const sessionRepository = new InMemorySessionRepository()
-  const authService = new AuthService(sessionRepository)
+  const isDatabaseBackedAuth = serverConfig.userDataSource === 'database' || serverConfig.userDataSource === 'hybrid'
+  const sessionRepository = isDatabaseBackedAuth ? new PrismaSessionRepository() : new InMemorySessionRepository()
+  const authIdentityRepository = isDatabaseBackedAuth ? new PrismaAuthIdentityRepository() : undefined
+  const authService = new AuthService(sessionRepository, authIdentityRepository)
   const authController = new AuthController(authService)
   const requireAuth = createRequireAuth(authService)
   const userRepository = new InMemoryUserRepository()

@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
+import { ZodError } from 'zod'
 import { HttpError } from '../../lib/http-error'
 import { authorizationHeaderSchema } from './auth.schemas'
 import type { AuthService } from './auth.service'
@@ -19,6 +20,11 @@ export function createRequireAuth(authService: AuthService): AuthMiddleware {
       request.authSession = session
       next()
     } catch (error) {
+      if (error instanceof ZodError) {
+        next(new HttpError(401, 'UNAUTHENTICATED', 'Cabeçalho de autenticação ausente ou inválido.'))
+        return
+      }
+
       next(error)
     }
   }

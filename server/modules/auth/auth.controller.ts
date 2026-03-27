@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 import { loginResponseSchema, logoutResponseSchema, meResponseSchema } from '../../../shared/contracts/auth'
+import { registerUserResponseSchema } from '../../../shared/contracts/user-account'
 import { HttpError } from '../../lib/http-error'
 import type { AuthService } from './auth.service'
 
@@ -9,6 +10,11 @@ export class AuthController {
   async login(request: Request, response: Response): Promise<void> {
     const session = await this.authService.login(request.body)
     response.status(200).json(loginResponseSchema.parse({ data: session }))
+  }
+
+  async register(request: Request, response: Response): Promise<void> {
+    const userProfile = await this.authService.register(request.body)
+    response.status(201).json(registerUserResponseSchema.parse({ data: userProfile }))
   }
 
   async me(request: Request, response: Response): Promise<void> {

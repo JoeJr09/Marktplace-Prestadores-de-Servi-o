@@ -28,14 +28,20 @@ export async function apiRequest<TResponse>(
   path: string,
   { schema, token, headers, ...init }: ApiRequestOptions<TResponse>
 ): Promise<TResponse> {
-  const response = await fetch(path, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers
-    }
-  })
+  let response: Response
+
+  try {
+    response = await fetch(path, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers
+      }
+    })
+  } catch (error) {
+    throw new ApiError(503, 'NETWORK_ERROR', 'Não foi possível conectar à API local.', error)
+  }
 
   const payload = await readJson(response)
 

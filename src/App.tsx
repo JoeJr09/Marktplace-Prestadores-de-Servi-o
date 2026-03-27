@@ -4,6 +4,7 @@ import { PublicOnlyRoute } from './auth/PublicOnlyRoute'
 import { CheckoutPage } from './pages/CheckoutPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
+import { RegisterPage } from './pages/RegisterPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { UserDetailsPage } from './pages/UserDetailsPage'
 import { UsersListPage } from './pages/UsersListPage'
@@ -16,6 +17,14 @@ export default function App() {
         element={
           <PublicOnlyRoute>
             <LoginPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <PublicOnlyRoute>
+            <RegisterPage />
           </PublicOnlyRoute>
         }
       />

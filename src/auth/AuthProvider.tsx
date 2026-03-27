@@ -7,6 +7,7 @@ import {
   type ReactNode
 } from 'react'
 import { fetchAuthenticatedUser, login as loginRequest, logout as logoutRequest } from '../services/authRepository'
+import { ApiError } from '../services/apiClient'
 import type { AuthUser, LoginCredentials } from '../types/auth'
 
 const AUTH_STORAGE_KEY = 'acode_aqui_dev_token'
@@ -47,7 +48,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(authenticatedUser)
         setStatus('authenticated')
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error instanceof ApiError && error.statusCode !== 401 && error.statusCode !== 403) {
+          setStatus('unauthenticated')
+          return
+        }
+
         window.localStorage.removeItem(AUTH_STORAGE_KEY)
         setToken(null)
         setUser(null)

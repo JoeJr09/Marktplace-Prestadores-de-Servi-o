@@ -146,6 +146,158 @@ button {
   padding: 28px;
 }
 
+.register-page {
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+}
+
+.register-hero {
+  padding-bottom: 72px;
+}
+
+.register-copy {
+  gap: 24px;
+}
+
+.register-copy h1 {
+  max-width: 11ch;
+}
+
+.register-highlights {
+  display: grid;
+  gap: 16px;
+}
+
+.register-highlight-card {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+}
+
+.register-highlight-card h3 {
+  margin: 0;
+}
+
+.register-panel {
+  align-items: stretch;
+}
+
+.register-card {
+  width: min(100%, 520px);
+  padding: 32px;
+  display: grid;
+  gap: 18px;
+}
+
+.register-card-header h2,
+.register-card-header p {
+  margin: 0;
+}
+
+.register-card-header p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.register-type-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.register-type-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-strong);
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.register-type-card:hover {
+  transform: translateY(-1px);
+}
+
+.register-type-card.is-selected {
+  border-color: rgba(111, 135, 149, 0.36);
+  box-shadow: 0 0 0 4px rgba(111, 135, 149, 0.12);
+}
+
+.register-type-card input {
+  margin-top: 3px;
+  accent-color: var(--brand);
+}
+
+.register-type-card strong,
+.register-type-card span {
+  display: block;
+}
+
+.register-type-card strong {
+  color: var(--text);
+}
+
+.register-type-card span {
+  margin-top: 4px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.register-form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.register-terms {
+  align-items: flex-start;
+}
+
+.register-terms span {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.register-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(119, 179, 155, 0.12);
+  border: 1px solid rgba(119, 179, 155, 0.22);
+  box-shadow: none;
+}
+
+.register-success p {
+  margin: 0;
+  color: var(--success);
+  line-height: 1.55;
+}
+
+.register-password-checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.register-password-checklist strong {
+  color: var(--text);
+}
+
+.register-password-checklist p {
+  color: var(--text-muted);
+}
+
+.register-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+}
+
 .surface {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -299,6 +451,10 @@ button {
   color: var(--text);
   outline: none;
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.field-input.is-invalid {
+  border-color: rgba(208, 160, 106, 0.7);
 }
 
 .field-input:focus,
@@ -1246,6 +1402,7 @@ textarea.field-input {
 @media (max-width: 1120px) {
   .auth-page,
   .app-shell,
+  .register-page,
   .dashboard-grid,
   .settings-grid,
   .checkout-layout,
@@ -1264,6 +1421,10 @@ textarea.field-input {
 
   .auth-panel {
     padding: 24px 20px 40px;
+  }
+
+  .register-page {
+    min-height: auto;
   }
 
   .shell-topbar,
@@ -1301,6 +1462,7 @@ textarea.field-input {
   .auth-hero,
   .shell-main,
   .login-card,
+  .register-card,
   .panel,
   .stat-card,
   .security-card,
@@ -1318,6 +1480,7 @@ textarea.field-input {
   }
 
   .login-meta,
+  .register-type-grid,
   .service-row,
   .activity-row,
   .invoice-row,
@@ -1338,5 +1501,9 @@ textarea.field-input {
 
   .user-row-main {
     align-items: flex-start;
+  }
+
+  .register-type-grid {
+    grid-template-columns: 1fr;
   }
 }
