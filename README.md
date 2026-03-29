@@ -4,12 +4,25 @@ Frontend React baseado nos layouts enviados (Figma), com foco em fidelidade visu
 
 ## Páginas implementadas
 
-- `/home` — Landing principal
-- `/services` — Listagem de prestadores
-- `/profile` — Perfil de profissional
-- `/register` — Cadastro de cliente
-- `/pro-register` — Cadastro de profissional
-- `/plans` — Planos de assinatura
+Públicas:
+
+- `/` — Landing principal do cliente
+- `/login` — Login com escolha entre Cliente e Profissional
+- `/register` — Cadastro de conta (cliente ou prestador)
+- `/become-pro` — Landing enterprise para prestadores / parceiros
+- `/help-center` — Central de ajuda
+- `/legal/terms` — Termos de uso
+- `/legal/privacy` — Política de privacidade
+
+Área autenticada:
+
+- `/dashboard` — Painel principal do ambiente logado
+- `/users` — Lista de usuários / clientes
+- `/users/:userId` — Detalhe do usuário
+- `/checkout` — Fluxo de finalização de serviço
+- `/subscriptions` — Assinaturas e planos
+- `/reviews` — Avaliações e feedback
+- `/settings` — Configurações de conta
 
 ## Rodando localmente
 
@@ -79,5 +92,5 @@ npm run build
 - O PostgreSQL local usa o schema dedicado `acode_aqui` quando `DATABASE_URL` aponta para `?schema=acode_aqui`.
 - O cadastro local já aceita criação de contas reais no banco, com validação compartilhada por Zod entre frontend e backend.
 - O registro local usa e-mail único, nome completo com até 255 caracteres e telefone brasileiro no formato `+55 (11) 99999-9999`.
-- Arquitetura de dados inicial do domínio de usuários: [docs/user-data-architecture.md](/home/renan/Documentos/UCB/5-Semestre/web/projeto_acode_aqui/Marktplace-Prestadores-de-Servi-o/docs/user-data-architecture.md)
-- Schema e seeds locais do banco: [schema.sql](/home/renan/Documentos/UCB/5-Semestre/web/projeto_acode_aqui/Marktplace-Prestadores-de-Servi-o/server/database/schema.sql) e [seed.dev.sql](/home/renan/Documentos/UCB/5-Semestre/web/projeto_acode_aqui/Marktplace-Prestadores-de-Servi-o/server/database/seed.dev.sql)
+- Arquitetura de dados inicial do domínio de usuários: [docs/user-data-architecture.md](docs/user-data-architecture.md)
+- Schema e seeds locais do banco: [server/database/schema.sql](server/database/schema.sql) e [server/database/seed.dev.sql](server/database/seed.dev.sql)

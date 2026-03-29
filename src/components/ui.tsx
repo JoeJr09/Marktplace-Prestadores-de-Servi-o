@@ -84,6 +84,7 @@ interface AppShellProps {
   description: string
   actions?: ReactNode
   sidebarExtra?: ReactNode
+  shellClassName?: string
   children: ReactNode
 }
 
@@ -202,11 +203,19 @@ export function BackLink({ to, children }: BackLinkProps) {
   )
 }
 
-export function AppShell({ title, eyebrow, description, actions, sidebarExtra, children }: AppShellProps) {
+export function AppShell({
+  title,
+  eyebrow,
+  description,
+  actions,
+  sidebarExtra,
+  shellClassName = '',
+  children
+}: AppShellProps) {
   const { isAuthenticated, logout, user } = useAuth()
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${shellClassName}`.trim()}>
       <aside className="shell-sidebar">
         <div className="sidebar-top">
           <Brand />

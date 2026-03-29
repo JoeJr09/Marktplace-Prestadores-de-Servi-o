@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
-import { spawn } from 'node:child_process'
+import { spawn, type ChildProcess } from 'node:child_process'
 
 const ENV_CANDIDATES = ['.env.local', '.env'] as const
 const prismaBinary = process.platform === 'win32' ? 'prisma.cmd' : 'prisma'
@@ -44,17 +44,27 @@ if (!process.env.DATABASE_URL) {
   process.exit(1)
 }
 
-const child = spawn(prismaPath, [...process.argv.slice(2), '--schema', 'prisma/schema.prisma'], {
-  cwd: process.cwd(),
-  stdio: 'inherit',
-  env: process.env
-})
+const isWindows = process.platform === 'win32'
 
-child.on('exit', (code) => {
-  process.exit(code ?? 1)
-})
+function safeSpawn(command: string, args: string[], opts: Record<string, unknown> = {}) {
+  try {
+  const spawnOpts = { cwd: process.cwd(), stdio: 'inherit', env: process.env, shell: isWindows ? true : false, ...opts }
+  // cast options to any to satisfy overload typing in TS; ensure runtime behavior is correct
+  const child = spawn(command, args, spawnOpts as any) as ChildProcess
 
-child.on('error', (error: Error) => {
-  console.error(error)
-  process.exit(1)
-})
+    child.on('error', (err) => {
+      console.error(`Failed to run ${command} ${args.join(' ')}:`, err)
+      process.exit(1)
+    })
+
+    child.on('exit', (code) => process.exit(code ?? 1))
+
+    return child
+  } catch (err) {
+    console.error(`Synchronous error while spawning ${command}:`, err)
+    process.exit(1)
+  }
+}
+
+// Use the resolved prismaPath; on Windows shell:true helps run .cmd wrappers reliably
+safeSpawn(prismaPath, [...process.argv.slice(2), '--schema', 'prisma/schema.prisma'])

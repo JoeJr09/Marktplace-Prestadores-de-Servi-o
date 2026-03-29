@@ -1,210 +1,123 @@
-import { useEffect, useState } from 'react'
-import { ArrowRight, Filter, Search, Users } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../auth/AuthProvider'
-import { AppShell, AvatarBadge, Button, EmptyState, StatusPill, Surface } from '../components/ui'
-import { ApiError } from '../services/apiClient'
-import { fetchUsers } from '../services/userRepository'
-import type { StatusTone } from '../types/app'
-import type { User, UserStatus } from '../types/user'
+import { Pencil, PlusCircle, Trash2 } from 'lucide-react'
+import { AppShell, Button, Surface, TextField } from '../components/ui'
 
-const statusMap: Record<UserStatus, { label: string; tone: StatusTone }> = {
-  active: { label: 'Ativo', tone: 'success' },
-  pending: { label: 'Em analise', tone: 'warning' },
-  inactive: { label: 'Inativo', tone: 'neutral' }
-}
+const services = [
+  {
+    category: 'STRUCTURAL GRADE',
+    title: 'Industrial Site Surveying',
+    description: 'Complete topographic and structural assessment for brownfield industrial deployment.',
+    rateLabel: 'Base rate',
+    rate: '$1,250/project',
+    status: 'ACTIVE'
+  },
+  {
+    category: 'TECHNICAL TIER',
+    title: 'Smart Grid Integration',
+    description: 'Optimization of energy consumption through industrial IoT and smart panel modernization.',
+    rateLabel: 'Standard fee',
+    rate: '$450/unit',
+    status: 'DRAFT'
+  }
+]
 
 export function UsersListPage() {
-  const { logout, token } = useAuth()
-  const [query, setQuery] = useState('')
-  const [users, setUsers] = useState<User[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  useEffect(() => {
-    let isMounted = true
-
-    if (!token) {
-      setIsLoading(false)
-      setErrorMessage('Sessão ausente. Faça login novamente.')
-      return () => {
-        isMounted = false
-      }
-    }
-
-    setIsLoading(true)
-    setErrorMessage(null)
-
-    fetchUsers({ query, token })
-      .then((result) => {
-        if (!isMounted) {
-          return
-        }
-
-        setUsers(result)
-        setIsLoading(false)
-      })
-      .catch((error: unknown) => {
-        if (!isMounted) {
-          return
-        }
-
-        if (error instanceof ApiError && error.statusCode === 401) {
-          void logout()
-          return
-        }
-
-        setErrorMessage(error instanceof Error ? error.message : 'Não foi possível carregar os usuários.')
-        setIsLoading(false)
-      })
-
-    return () => {
-      isMounted = false
-    }
-  }, [query, token, logout])
-
-  const activeUsers = users.filter((user) => user.status === 'active').length
-
   return (
     <AppShell
-      eyebrow="Usuarios"
-      title="Base de usuarios navegavel"
-      description="Mock operacional para acompanhar clientes e parceiros em uma linguagem visual urbana, sóbria e pronta para evoluir para API real."
-      actions={
-        <>
-          <Button variant="secondary">
-            <Filter size={16} aria-hidden="true" />
-            Filtrar
-          </Button>
-          <Button>
-            <Users size={16} aria-hidden="true" />
-            Novo usuario
-          </Button>
-        </>
-      }
+      shellClassName="model-shell"
+      eyebrow="Service Management"
+      title="Service Management"
+      description="Configure your urban professional offerings"
+      actions={<Button variant="secondary">Marco Silva · Top Pro Grade</Button>}
       sidebarExtra={
-        <Surface className="sidebar-card" as="div">
-          <p>Usuarios monitorados</p>
-          <strong>{String(users.length || 4).padStart(2, '0')}</strong>
-          <span>{activeUsers || 2} perfis ativos com interacao recente no fluxo mockado.</span>
-        </Surface>
+        <div className="model-sidebar-aux">
+          <Button className="full-width" type="button">
+            Post a Service
+          </Button>
+          <div className="model-sidebar-links">
+            <span>Help Center</span>
+            <span>Privacy</span>
+          </div>
+        </div>
       }
     >
-      <section className="users-overview">
-        <Surface className="stat-card" as="article">
-          <span>Perfis ativos</span>
-          <strong>{activeUsers}</strong>
-          <StatusPill tone="success">Base aquecida</StatusPill>
-        </Surface>
-        <Surface className="stat-card" as="article">
-          <span>Em onboarding</span>
-          <strong>{users.filter((user) => user.status === 'pending').length}</strong>
-          <StatusPill tone="warning">Revisao aberta</StatusPill>
-        </Surface>
-        <Surface className="stat-card" as="article">
-          <span>Sem pedidos ativos</span>
-          <strong>{users.filter((user) => user.openOrders === 0).length}</strong>
-          <StatusPill tone="neutral">Reengajar</StatusPill>
-        </Surface>
-      </section>
-
-      <Surface className="panel users-panel" as="section">
-        <div className="panel-header users-panel-header">
-          <div>
-            <span className="section-kicker">Listagem</span>
-            <h2>Usuarios da operacao</h2>
-            <p>Navegue entre perfis, consulte status e avance para o detalhe sem depender de backend real.</p>
+      <section className="model-service-grid">
+        <Surface className="model-service-form" as="form">
+          <div className="model-service-form-head">
+            <h2>
+              <PlusCircle size={18} aria-hidden="true" />
+              New Service Blueprint
+            </h2>
           </div>
 
-          <label className="searchbox users-searchbox" aria-label="Buscar usuarios">
-            <Search size={16} aria-hidden="true" />
-            <input
-              type="search"
-              placeholder="Buscar por nome, empresa, ID ou cidade"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </label>
-        </div>
+          <TextField label="Service title" placeholder="e.g. Urban HVAC Architecture" />
 
-        {isLoading ? (
-          <div className="user-list" aria-live="polite">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <article key={index} className="user-row is-skeleton">
-                <div className="user-row-main">
-                  <span className="skeleton-avatar" aria-hidden="true" />
-                  <div className="user-row-copy">
-                    <span className="skeleton-line wide" aria-hidden="true" />
-                    <span className="skeleton-line" aria-hidden="true" />
+          <div className="model-service-row-2">
+            <TextField label="Category" placeholder="Engineering" />
+            <TextField label="Base price (USD)" placeholder="0.00" />
+          </div>
+
+          <TextField
+            label="Technical description"
+            as="textarea"
+            rows={4}
+            placeholder="Detail the structural scope and technical requirements..."
+          />
+
+          <Button className="full-width" type="submit">
+            Initialize Service
+          </Button>
+
+          <div className="model-domain-list">
+            <strong>Active domains</strong>
+            <div>
+              <span>Construction</span>
+              <span>Civil Work</span>
+              <span>Automation</span>
+              <span>+ Add category</span>
+            </div>
+          </div>
+        </Surface>
+
+        <div className="model-service-portfolio">
+          <div className="model-service-portfolio-head">
+            <h2>Current portfolio</h2>
+            <span>3 active offerings</span>
+          </div>
+
+          <div className="model-service-list">
+            {services.map((service) => (
+              <Surface key={service.title} className="model-service-card" as="article">
+                <div className="model-service-image" aria-hidden="true" />
+                <div className="model-service-copy">
+                  <small>{service.category}</small>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <div className="model-service-footer">
+                    <div>
+                      <span>{service.rateLabel}</span>
+                      <strong>{service.rate}</strong>
+                    </div>
+                    <span>{service.status}</span>
                   </div>
                 </div>
-                <span className="skeleton-line short" aria-hidden="true" />
-              </article>
+                <div className="model-service-actions" aria-label="Ações do serviço">
+                  <button type="button" aria-label={`Editar ${service.title}`}>
+                    <Pencil size={15} aria-hidden="true" />
+                  </button>
+                  <button type="button" aria-label={`Excluir ${service.title}`}>
+                    <Trash2 size={15} aria-hidden="true" />
+                  </button>
+                </div>
+              </Surface>
             ))}
           </div>
-        ) : errorMessage ? (
-          <EmptyState
-            title="Falha ao carregar usuários"
-            description={errorMessage}
-            action={
-              <Button variant="secondary" onClick={() => setQuery((currentQuery) => currentQuery.trim())}>
-                Tentar novamente
-              </Button>
-            }
-          />
-        ) : users.length === 0 ? (
-          <EmptyState
-            title="Nenhum usuario encontrado"
-            description="Ajuste o termo de busca para testar o estado vazio. A camada de dados segue pronta para futura troca por API."
-            action={
-              <Button variant="secondary" onClick={() => setQuery('')}>
-                Limpar busca
-              </Button>
-            }
-          />
-        ) : (
-          <div className="user-list">
-            {users.map((user) => {
-              const status = statusMap[user.status]
 
-              return (
-                <Link key={user.slug} to={`/users/${user.slug}`} className="user-row-link">
-                  <article className="user-row">
-                    <div className="user-row-main">
-                      <AvatarBadge name={user.fullName} tone={user.avatarTone} />
-                      <div className="user-row-copy">
-                        <div className="user-row-heading">
-                          <h3>{user.fullName}</h3>
-                          <StatusPill tone={status.tone}>{status.label}</StatusPill>
-                        </div>
-                        <p>
-                          {user.role} · {user.company}
-                        </p>
-                        <div className="user-row-meta">
-                          <span>{user.id}</span>
-                          <span>{user.email}</span>
-                          <span>{user.city}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="user-row-side">
-                      <strong>{user.openOrders} pedidos</strong>
-                      <span>{user.lifetimeValue}</span>
-                      <span>{user.responseExpectation}</span>
-                    </div>
-
-                    <span className="user-row-cta">
-                      Ver detalhe
-                      <ArrowRight size={16} aria-hidden="true" />
-                    </span>
-                  </article>
-                </Link>
-              )
-            })}
-          </div>
-        )}
-      </Surface>
+          <Surface className="model-expand-service" as="div">
+            <h3>Expand Your Urban Footprint</h3>
+            <p>Click to draft a new professional service and reach more enterprise clients.</p>
+          </Surface>
+        </div>
+      </section>
     </AppShell>
   )
 }

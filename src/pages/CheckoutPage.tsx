@@ -1,126 +1,131 @@
-import { CreditCard, LockKeyhole, ShieldCheck } from 'lucide-react'
-import { AppShell, Button, StatusPill, Stepper, Surface, TextField } from '../components/ui'
-import { checkoutItems, checkoutSteps, paymentMethods } from '../data/appData'
-
-const subtotal = checkoutItems.reduce((total, item) => total + item.price * item.quantity, 0)
-const fees = 58
-const total = subtotal + fees
+import { ArrowLeft, Building2, CreditCard, Info, Lock, Wallet } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Button, Surface } from '../components/ui'
 
 export function CheckoutPage() {
   return (
-    <AppShell
-      eyebrow="Checkout"
-      title="Concluir pagamento"
-      description="Fluxo objetivo para revisar itens, escolher a forma de pagamento e finalizar a contratação."
-      actions={<StatusPill tone="info">Ambiente seguro</StatusPill>}
-      sidebarExtra={
-        <Surface className="sidebar-card" as="div">
-          <p>Suporte financeiro</p>
-          <strong>Online agora</strong>
-          <span>Atendimento para dúvidas de cobrança e confirmação de pagamento.</span>
-        </Surface>
-      }
-    >
-      <section className="checkout-layout">
-        <Surface className="panel checkout-main" as="section">
-          <Stepper steps={checkoutSteps} currentStep={1} />
+    <div className="model-checkout-page">
+      <header className="model-checkout-topbar">
+        <Link to="/users" className="model-checkout-link">
+          <ArrowLeft size={14} aria-hidden="true" />
+          Return to Search
+        </Link>
+        <strong>Acode Aqui</strong>
+        <span className="model-checkout-secure">
+          <Lock size={12} aria-hidden="true" /> Secure Checkout
+        </span>
+      </header>
 
-          <div className="checkout-block">
-            <div className="panel-header">
+      <main className="model-checkout-main">
+        <section className="model-checkout-grid">
+          <Surface className="model-checkout-form" as="section">
+            <h1>Finalize Your Service</h1>
+            <p>Review your selection and choose a secure payment method to lock in your professional.</p>
+
+            <h2>01 Payment Method</h2>
+            <div className="model-payment-cards" role="radiogroup" aria-label="Payment method">
+              <label className="model-payment-card is-active">
+                <input type="radio" name="pay-method" defaultChecked />
+                <CreditCard size={16} aria-hidden="true" />
+                <span>Standard Pay</span>
+                <strong>Credit / Debit</strong>
+              </label>
+
+              <label className="model-payment-card">
+                <input type="radio" name="pay-method" />
+                <Wallet size={16} aria-hidden="true" />
+                <span>Instant</span>
+                <strong>Digital Wallet</strong>
+              </label>
+
+              <label className="model-payment-card">
+                <input type="radio" name="pay-method" />
+                <Building2 size={16} aria-hidden="true" />
+                <span>Direct</span>
+                <strong>Bank Transfer</strong>
+              </label>
+            </div>
+
+            <div className="model-checkout-fields">
               <div>
-                <span className="section-kicker">Resumo</span>
-                <h2>Itens da contratação</h2>
+                <label>Cardholder Name</label>
+                <input value="ALEXANDER VANCE" readOnly />
+              </div>
+              <div>
+                <label>Card Number</label>
+                <input value="**** **** **** 4421" readOnly />
+              </div>
+              <div>
+                <label>Expiry Date</label>
+                <input value="MM/YY" readOnly />
+              </div>
+              <div>
+                <label>CVV</label>
+                <input value="123" readOnly />
+              </div>
+              <div className="wide">
+                <label>Postal Code</label>
+                <input value="10001" readOnly />
               </div>
             </div>
 
-            <div className="invoice-list">
-              {checkoutItems.map((item) => (
-                <article key={item.name} className="invoice-row">
-                  <div>
-                    <h3>{item.name}</h3>
-                    <p>{item.description}</p>
-                  </div>
-                  <span>{item.quantity}x</span>
-                  <strong>R$ {item.price.toFixed(2).replace('.', ',')}</strong>
-                </article>
-              ))}
-            </div>
-          </div>
+            <h2>02 Review Requirements</h2>
+            <Surface className="model-requirement-box" as="article">
+              <h3>
+                <Info size={16} aria-hidden="true" /> Project Milestone Agreement
+              </h3>
+              <p>
+                By proceeding, you agree that 50% of the funds will be held in escrow until the first delivery
+                milestone is met. The remaining balance will be released upon final project approval.
+              </p>
+            </Surface>
+          </Surface>
 
-          <div className="checkout-block">
-            <div className="panel-header">
+          <aside className="model-checkout-side">
+            <Surface className="model-order-summary" as="section">
+              <span>Premium Service</span>
+              <h3>Architectural Design Phase 1</h3>
+              <small>Professional: Julian Sterling</small>
+
               <div>
-                <span className="section-kicker">Pagamento</span>
-                <h2>Escolha a forma de pagamento</h2>
+                <p>
+                  Subtotal <strong>$1,250.00</strong>
+                </p>
+                <p>
+                  Platform Fee (5%) <strong>$62.50</strong>
+                </p>
+                <p>
+                  Urban Insurance <strong>$15.00</strong>
+                </p>
               </div>
-            </div>
 
-            <div className="payment-options" role="radiogroup" aria-label="Métodos de pagamento">
-              {paymentMethods.map(({ label, icon: Icon, description }, index) => (
-                <label key={label} className={`payment-card ${index === 0 ? 'is-selected' : ''}`}>
-                  <input type="radio" name="payment" defaultChecked={index === 0} />
-                  <div className="icon-chip soft">
-                    <Icon size={18} aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3>{label}</h3>
-                    <p>{description}</p>
-                  </div>
-                </label>
-              ))}
-            </div>
+              <h4>
+                Total Amount <strong>$1,327.50</strong>
+              </h4>
 
-            <div className="form-grid three-columns">
-              <TextField label="Nome no cartão" placeholder="Acode Aqui Studio" />
-              <TextField label="Número do cartão" placeholder="1234 5678 9012 3456" />
-              <TextField label="Validade" placeholder="08/28" />
-              <TextField label="CVV" placeholder="123" />
-              <TextField label="CPF/CNPJ" placeholder="00.000.000/0000-00" />
-              <TextField label="CEP" placeholder="70000-000" />
-            </div>
-          </div>
-        </Surface>
+              <Button className="full-width">Confirm and Pay</Button>
+              <small>Encrypted 256-bit SSL connection</small>
+            </Surface>
 
-        <Surface className="panel checkout-summary" as="aside">
-          <div className="panel-header">
-            <div>
-              <span className="section-kicker">Confirmação</span>
-              <h2>Resumo financeiro</h2>
-            </div>
-          </div>
+            <Surface className="model-verified-box" as="div">
+              <strong>Acode Verified</strong>
+              <span>Buyer protection active</span>
+            </Surface>
+          </aside>
+        </section>
+      </main>
 
-          <div className="summary-lines">
-            <div>
-              <span>Subtotal</span>
-              <strong>R$ {subtotal.toFixed(2).replace('.', ',')}</strong>
-            </div>
-            <div>
-              <span>Taxas</span>
-              <strong>R$ {fees.toFixed(2).replace('.', ',')}</strong>
-            </div>
-            <div className="summary-total">
-              <span>Total</span>
-              <strong>R$ {total.toFixed(2).replace('.', ',')}</strong>
-            </div>
-          </div>
-
-          <Button className="full-width">
-            <CreditCard size={16} aria-hidden="true" />
-            Confirmar pagamento
-          </Button>
-
-          <div className="trust-list">
-            <div>
-              <ShieldCheck size={16} aria-hidden="true" />
-              <span>Processamento criptografado</span>
-            </div>
-            <div>
-              <LockKeyhole size={16} aria-hidden="true" />
-              <span>Conformidade com boas práticas de segurança</span>
-            </div>
-          </div>
-        </Surface>
-      </section>
-    </AppShell>
+      <footer className="model-shell-footer">
+        <strong>Acode Aqui</strong>
+        <nav aria-label="Rodapé interno">
+          <span>Find a professional</span>
+          <span>Offer services</span>
+          <span>How it works</span>
+          <span>Help center</span>
+          <span>Terms</span>
+          <span>Privacy</span>
+        </nav>
+      </footer>
+    </div>
   )
 }

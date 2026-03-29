@@ -1,13 +1,23 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './auth/ProtectedRoute'
 import { PublicOnlyRoute } from './auth/PublicOnlyRoute'
-import { CheckoutPage } from './pages/CheckoutPage'
-import { DashboardPage } from './pages/DashboardPage'
-import { LoginPage } from './pages/LoginPage'
-import { RegisterPage } from './pages/RegisterPage'
-import { SettingsPage } from './pages/SettingsPage'
-import { UserDetailsPage } from './pages/UserDetailsPage'
-import { UsersListPage } from './pages/UsersListPage'
+import {
+  CheckoutPage,
+  DashboardPage,
+  HomePage,
+  HelpCenterPage,
+  LoginPage,
+  NotFoundPage,
+  PrivacyPage,
+  ProRegistrationPage,
+  RegisterPage,
+  ReviewsPage,
+  SettingsPage,
+  SubscriptionsPage,
+  TermsPage,
+  UserDetailsPage,
+  UsersListPage,
+} from './pages'
 
 export default function App() {
   return (
@@ -31,11 +41,23 @@ export default function App() {
       <Route
         path="/"
         element={
-          <ProtectedRoute>
-            <Navigate to="/dashboard" replace />
-          </ProtectedRoute>
+          // Public landing. Authenticated users will be redirected to dashboard by PublicOnlyRoute.
+          <PublicOnlyRoute>
+            <HomePage />
+          </PublicOnlyRoute>
         }
       />
+      <Route
+        path="/become-pro"
+        element={
+          <PublicOnlyRoute>
+            <ProRegistrationPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route path="/help-center" element={<HelpCenterPage />} />
+      <Route path="/legal/terms" element={<TermsPage />} />
+      <Route path="/legal/privacy" element={<PrivacyPage />} />
       <Route
         path="/dashboard"
         element={
@@ -61,6 +83,22 @@ export default function App() {
         }
       />
       <Route
+        path="/subscriptions"
+        element={
+          <ProtectedRoute>
+            <SubscriptionsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reviews"
+        element={
+          <ProtectedRoute>
+            <ReviewsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/settings"
         element={
           <ProtectedRoute>
@@ -76,7 +114,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }

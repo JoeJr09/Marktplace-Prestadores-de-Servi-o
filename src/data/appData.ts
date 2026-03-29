@@ -2,13 +2,16 @@ import {
   Bell,
   BriefcaseBusiness,
   CalendarRange,
+  CircleDollarSign,
   CreditCard,
   FileClock,
   LayoutDashboard,
-  Users,
+  MessageSquareText,
+  Package,
+  Settings,
+  Wrench,
   MonitorSmartphone,
   ShieldCheck,
-  SlidersHorizontal,
   WalletCards
 } from 'lucide-react'
 import type {
@@ -24,9 +27,11 @@ import type {
 
 export const mainNavItems: MainNavItem[] = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/users', label: 'Usuários', icon: Users },
-  { to: '/checkout', label: 'Checkout', icon: WalletCards },
-  { to: '/settings', label: 'Configurações', icon: SlidersHorizontal }
+  { to: '/users', label: 'Service Management', icon: Wrench },
+  { to: '/subscriptions', label: 'Subscriptions', icon: Package },
+  { to: '/reviews', label: 'Reviews', icon: MessageSquareText },
+  { to: '/checkout', label: 'Order Details', icon: CircleDollarSign },
+  { to: '/settings', label: 'Settings', icon: Settings }
 ]
 
 export const dashboardStats: DashboardStat[] = [
