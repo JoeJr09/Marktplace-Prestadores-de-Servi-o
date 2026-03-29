@@ -1,6 +1,6 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ZodError } from 'zod'
 import { ApiError } from '../services/apiClient'
 import { register as registerRequest } from '../services/authRepository'
@@ -87,6 +87,7 @@ function formatBrazilPhoneInput(value: string) {
 }
 
 export function RegisterPage() {
+  const [searchParams] = useSearchParams()
   const [form, setForm] = useState<RegisterFormState>(initialFormState)
   const [errors, setErrors] = useState<ValidationState>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -105,6 +106,14 @@ export function RegisterPage() {
     [form.password]
   )
   const confirmPasswordMatches = form.confirmPassword.length > 0 && form.password === form.confirmPassword
+
+  useEffect(() => {
+    const persona = searchParams.get('persona') as AccountType | null
+
+    if (persona === 'cliente' || persona === 'prestador') {
+      setForm((current) => ({ ...current, accountType: persona }))
+    }
+  }, [searchParams])
 
   function updateField<K extends keyof RegisterFormState>(field: K, value: RegisterFormState[K]) {
     setForm((current) => ({ ...current, [field]: value }))

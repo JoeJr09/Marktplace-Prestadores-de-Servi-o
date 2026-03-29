@@ -15,7 +15,7 @@ export function HomePage() {
 
           <nav className="client-home-nav" aria-label="Navegação principal">
             <Link to="/users">Encontrar profissional</Link>
-            <a href="#how-it-works">Como funciona</a>
+            <Link to="/#how-it-works">Como funciona</Link>
             <Link to="/become-pro">Oferecer serviços</Link>
             <Link to="/help-center">Central de ajuda</Link>
           </nav>
@@ -45,10 +45,16 @@ export function HomePage() {
                 projeto arquitetônico.
               </p>
               <div className="client-home-hero-actions">
-                <Link to="/become-pro" className="client-home-hero-btn client-home-hero-btn-primary">
+                <Link
+                  to="/login?persona=prestador"
+                  className="client-home-hero-btn client-home-hero-btn-primary"
+                >
                   Sou profissional
                 </Link>
-                <Link to="/users" className="client-home-hero-btn client-home-hero-btn-secondary">
+                <Link
+                  to="/login?persona=cliente"
+                  className="client-home-hero-btn client-home-hero-btn-secondary"
+                >
                   Sou cliente
                 </Link>
               </div>
@@ -230,10 +236,10 @@ export function HomePage() {
                 mesma base operacional.
               </p>
               <div className="client-home-cta-actions">
-                <Link to="/users" className="client-home-primary-btn">
+                <Link to="/login?persona=cliente" className="client-home-primary-btn">
                   Começar como cliente
                 </Link>
-                <Link to="/become-pro" className="client-home-link-btn">
+                <Link to="/login?persona=prestador" className="client-home-link-btn">
                   Explorar como profissional
                 </Link>
               </div>

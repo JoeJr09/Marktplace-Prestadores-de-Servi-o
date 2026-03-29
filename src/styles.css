@@ -1,41 +1,45 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap");
+
 :root {
   color-scheme: light;
-  --bg: #181c20;
-  --bg-strong: #111417;
-  --bg-soft: #22272d;
-  --surface: rgba(33, 39, 45, 0.92);
-  --surface-strong: #2a3037;
-  --surface-elevated: #313840;
-  --surface-dark: #101418;
-  --surface-dark-2: #090c0f;
-  --line: #3a4149;
-  --line-strong: #505963;
-  --text: #eff2f4;
-  --text-muted: #b3bcc5;
-  --text-soft: #7f8994;
-  --text-inverse: #f7f9fb;
-  --brand: #6f8795;
-  --brand-strong: #cdd6dd;
-  --brand-contrast: #101418;
-  --accent: #b48658;
-  --accent-soft: rgba(180, 134, 88, 0.14);
-  --success: #77b39b;
-  --success-soft: rgba(119, 179, 155, 0.16);
-  --warning: #d0a06a;
-  --warning-soft: rgba(208, 160, 106, 0.18);
-  --info: #8aa3b7;
-  --info-soft: rgba(138, 163, 183, 0.16);
-  --neutral-soft: rgba(179, 188, 197, 0.14);
-  --focus-ring: rgba(111, 135, 149, 0.28);
-  --hero-glow: rgba(180, 134, 88, 0.2);
-  --sidebar-bg: rgba(9, 12, 15, 0.98);
-  --sidebar-link: rgba(239, 242, 244, 0.7);
-  --sidebar-link-hover: rgba(255, 255, 255, 0.08);
-  --surface-panel: rgba(255, 255, 255, 0.03);
-  --surface-highlight: linear-gradient(135deg, rgba(205, 214, 221, 0.08), rgba(180, 134, 88, 0.12));
-  --skeleton: rgba(255, 255, 255, 0.08);
-  --shadow-lg: 0 28px 60px rgba(0, 0, 0, 0.28);
-  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.24);
+  /* Base shell — Urban Iron: navy profundo, concreto e acento ouro velho */
+  --bg: #f2f4f5;
+  --bg-strong: #e3e8ef;
+  --bg-soft: #e5edf5;
+  --surface: #ffffff;
+  --surface-strong: #f8fafc;
+  --surface-elevated: #ffffff;
+  --surface-dark: #020617;
+  --surface-dark-2: #020617;
+  --line: #d0d7e2;
+  --line-strong: #9ca3af;
+  --text: #041627;
+  --text-muted: #6b7280;
+  --text-soft: #9ca3af;
+  --text-inverse: #f9fafb;
+  --brand: #1a2b3c;
+  --brand-strong: #041627;
+  --brand-contrast: #f9fafb;
+  --accent: #d48806;
+  --accent-soft: rgba(212, 136, 6, 0.16);
+  --success: #059669;
+  --success-soft: rgba(5, 150, 105, 0.14);
+  --warning: #d97706;
+  --warning-soft: rgba(217, 119, 6, 0.16);
+  --info: #2563eb;
+  --info-soft: rgba(37, 99, 235, 0.14);
+  --neutral-soft: rgba(148, 163, 184, 0.18);
+  --focus-ring: rgba(37, 99, 235, 0.25);
+  --hero-glow: rgba(15, 23, 42, 0.4);
+  --sidebar-bg: #020617;
+  --sidebar-link: rgba(226, 232, 240, 0.88);
+  --sidebar-link-hover: rgba(15, 23, 42, 0.9);
+  --surface-panel: rgba(15, 23, 42, 0.04);
+  --surface-highlight: linear-gradient(135deg, rgba(15, 23, 42, 0.06), rgba(212, 136, 6, 0.16));
+  --skeleton: rgba(148, 163, 184, 0.22);
+  --shadow-lg: 0 28px 60px rgba(15, 23, 42, 0.22);
+  --shadow-md: 0 14px 30px rgba(15, 23, 42, 0.18);
   --radius-xl: 32px;
   --radius-lg: 24px;
   --radius-md: 18px;
@@ -53,10 +57,8 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  font-family: "Trebuchet MS", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background:
-    radial-gradient(circle at top left, var(--hero-glow), transparent 24%),
-    linear-gradient(180deg, #1d2227 0%, var(--bg) 45%, var(--bg-strong) 100%);
+  font-family: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: var(--bg);
   color: var(--text);
 }
 
@@ -101,8 +103,7 @@ button {
   overflow: hidden;
   padding: 56px clamp(24px, 5vw, 72px);
   background:
-    linear-gradient(135deg, rgba(111, 135, 149, 0.24), rgba(9, 12, 15, 0.72)),
-    linear-gradient(180deg, #181d22, #090c0f);
+    linear-gradient(135deg, #020617 0%, #0b1f3b 55%, #020617 100%);
   color: var(--text-inverse);
 }
 
@@ -144,6 +145,7 @@ button {
   display: grid;
   place-items: center;
   padding: 28px;
+  background-color: var(--bg);
 }
 
 .register-page {
@@ -4849,12 +4851,15 @@ textarea.field-input {
   font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.9;
 }
 
 .help-center-hero-copy h1 {
   margin: 0;
-  font-size: clamp(2rem, 3.6vw, 3.1rem);
-  letter-spacing: -0.05em;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  letter-spacing: -0.06em;
+  font-weight: 800;
 }
 
 .help-center-hero-copy p {
@@ -5003,6 +5008,7 @@ textarea.field-input {
   padding: 16px 18px 14px;
   display: grid;
   gap: 10px;
+  box-shadow: 0 18px 40px rgba(5, 10, 20, 0.55);
 }
 
 .help-center-category header h2 {
@@ -5024,6 +5030,7 @@ textarea.field-input {
   border: 1px solid rgba(108, 126, 148, 0.85);
   background: rgba(9, 15, 28, 0.98);
   padding: 12px 12px 10px;
+  box-shadow: 0 14px 30px rgba(5, 10, 20, 0.45);
 }
 
 .help-center-cards h3 {
@@ -5042,6 +5049,7 @@ textarea.field-input {
   padding: 16px 18px 14px;
   display: grid;
   gap: 10px;
+  box-shadow: 0 18px 40px rgba(5, 10, 20, 0.55);
 }
 
 .help-center-faq header h2 {
@@ -5066,6 +5074,7 @@ textarea.field-input {
   border: 1px solid rgba(108, 126, 148, 0.85);
   background: rgba(9, 15, 28, 0.98);
   padding: 12px 12px 10px;
+  box-shadow: 0 14px 30px rgba(5, 10, 20, 0.45);
 }
 
 .help-center-faq h3 {
@@ -5084,6 +5093,7 @@ textarea.field-input {
   padding: 16px 18px 14px;
   display: grid;
   gap: 10px;
+  box-shadow: 0 18px 40px rgba(5, 10, 20, 0.55);
 }
 
 .help-center-resources header h2 {
@@ -5106,6 +5116,7 @@ textarea.field-input {
   border: 1px solid rgba(108, 126, 148, 0.85);
   background: rgba(9, 15, 28, 0.98);
   padding: 12px 12px 10px;
+  box-shadow: 0 14px 30px rgba(5, 10, 20, 0.45);
 }
 
 .help-center-resources-grid p {

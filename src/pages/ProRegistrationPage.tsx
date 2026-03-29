@@ -15,16 +15,16 @@ export function ProRegistrationPage() {
 
           <nav className="client-home-nav" aria-label="Navegação principal">
             <Link to="/users">Encontrar profissional</Link>
-            <a href="#onboarding">Protocolo de onboarding</a>
-            <Link to="/become-pro">Portal corporativo</Link>
-            <Link to="/help-center">Suporte</Link>
+            <Link to="/#how-it-works">Como funciona</Link>
+            <Link to="/become-pro">Oferecer serviços</Link>
+            <Link to="/help-center">Central de ajuda</Link>
           </nav>
 
           <div className="client-home-actions">
             <Link to="/login" className="client-home-link-btn">
               Entrar
             </Link>
-            <Link to="/register" className="client-home-primary-btn">
+            <Link to="/register?persona=prestador" className="client-home-primary-btn">
               Solicitar acesso
             </Link>
           </div>
@@ -45,12 +45,15 @@ export function ProRegistrationPage() {
                 governança embutida.
               </p>
               <div className="pro-enterprise-hero-actions">
-                <button type="button" className="pro-enterprise-btn pro-enterprise-btn-primary">
+                <Link
+                  to="/register?persona=prestador"
+                  className="pro-enterprise-btn pro-enterprise-btn-primary"
+                >
                   Cadastrar sua empresa
-                </button>
-                <button type="button" className="pro-enterprise-btn pro-enterprise-btn-ghost">
+                </Link>
+                <Link to="/login?persona=prestador" className="pro-enterprise-btn pro-enterprise-btn-ghost">
                   Ver oportunidades
-                </button>
+                </Link>
               </div>
               <div className="pro-enterprise-hero-meta">
                 <span>Feito para agências, times de facilities e operadores de infraestrutura.</span>
@@ -252,8 +255,8 @@ export function ProRegistrationPage() {
           </div>
           <nav aria-label="Rodapé">
             <Link to="/users">Encontrar profissional</Link>
-            <a href="#onboarding">Protocolo de onboarding</a>
-            <Link to="/become-pro">Portal corporativo</Link>
+            <Link to="/#how-it-works">Como funciona</Link>
+            <Link to="/become-pro">Oferecer serviços</Link>
             <Link to="/legal/terms">Termos de uso</Link>
             <Link to="/legal/privacy">Política de privacidade</Link>
           </nav>

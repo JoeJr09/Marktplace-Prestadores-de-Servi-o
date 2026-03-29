@@ -15,7 +15,7 @@ export function HelpCenterPage() {
 
           <nav className="client-home-nav" aria-label="Navegação principal">
             <Link to="/users">Encontrar profissional</Link>
-            <a href="/">Como funciona</a>
+            <Link to="/#how-it-works">Como funciona</Link>
             <Link to="/become-pro">Oferecer serviços</Link>
             <span className="help-center-nav-current">Central de ajuda</span>
           </nav>
